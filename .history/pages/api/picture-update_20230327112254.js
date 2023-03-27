@@ -6,7 +6,7 @@ console.log("file running")
 //first create a `bynder instance` since we are using Bynder sdk'
 const bynder = new Bynder({
   baseURL: "https://balr.getbynder.com/api/",
-  permanentToken: "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd",
+  permanentToken: process.env.BYNDER_PERMANENT_TOKEN,
 });
 
 //this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
@@ -20,7 +20,7 @@ async function pushImagesToShopify(images, productId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Shopify-Access-Token": "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",
+            "X-Shopify-Access-Token": process.env.ACCESS_BOUTIQUE_TOKEN,
           },
           body: JSON.stringify({
             image: {
@@ -48,7 +48,7 @@ export default async function (req, res) {
   const hmacHeader = req.headers["x-shopify-hmac-sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac("sha256", "1120d740c09533810b70f023a9726fe93b66ebc33e411f060bb2bd598ed7731d ")
+    .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
     .digest("base64");
   // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook

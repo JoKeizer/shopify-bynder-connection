@@ -1,46 +1,3 @@
-import Bynder from "@bynder/bynder-js-sdk";
-import getRawBody from "raw-body";
-import crypto from "crypto";
-console.log("file running")
-
-//first create a `bynder instance` since we are using Bynder sdk'
-const bynder = new Bynder({
-  baseURL: "https://balr.getbynder.com/api/",
-  permanentToken: "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd",
-});
-
-//this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
-async function pushImagesToShopify(images, productId) {
-  console.log("push images to shoify")
-  for (let i = 0; i < images.length; i++) {
-    try {
-      const response = await fetch(
-        `https://boutique-store-balr.myshopify.com/admin/api/2022-07/products/${productId}/images.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Access-Token": "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",
-          },
-          body: JSON.stringify({
-            image: {
-              src: images[i],
-            },
-          }),
-        }
-      );
-      const data = await response.json();
-      console.info(
-        `Processed image ${images[i]} for product ${productId}:`,
-        data
-      );
-    } catch (err) {
-      console.error("Error fetching", err);
-    }
-  }
-}
-
-//this is the `serverless function` that takes care of the communication between shopify's webhook and bynder service
 export default async function (req, res) {
   // We need to await the Stream to receive the complete body Buffer
   const body = await getRawBody(req);
@@ -48,7 +5,7 @@ export default async function (req, res) {
   const hmacHeader = req.headers["x-shopify-hmac-sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac("sha256", "1120d740c09533810b70f023a9726fe93b66ebc33e411f060bb2bd598ed7731d ")
+    .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
     .digest("base64");
   // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
@@ -119,10 +76,3 @@ export default async function (req, res) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 }
-
-// We turn off the default bodyParser provided by Next.js
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
