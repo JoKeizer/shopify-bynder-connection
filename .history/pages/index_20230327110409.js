@@ -3,7 +3,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
-  console.log("App running....")
+  console.log("App running")
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +14,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-         Bynder Connection App TEST
+         Bynder Connection App
         </h1>
 
       </main>
