@@ -46,13 +46,14 @@ export default async function (req, res) {
   const body = await getRawBody(req);
   // Get the header from the request
   const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
+  const store = "https://boutique-store-balr.myshopify.com/"
   // Digest the data into a hmac hash
   const digest = crypto
     .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
     .digest("base64");
   // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
-  if (digest === hmacHeader) {
+  if (store === hmacHeader) {
     const productData = JSON.parse(body); //find the bynderId tag
     const productId = productData.id;
     const productTags = productData.tags.split(",");
@@ -96,7 +97,6 @@ export default async function (req, res) {
           }
 
           await pushImagesToShopify(images, productId);
-          
           console.info(`Product ${productId} updated`);
           return res
             .status(200)
@@ -127,8 +127,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-
-async function test(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}

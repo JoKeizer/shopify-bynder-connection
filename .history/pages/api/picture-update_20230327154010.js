@@ -96,7 +96,7 @@ export default async function (req, res) {
           }
 
           await pushImagesToShopify(images, productId);
-          
+          await test()
           console.info(`Product ${productId} updated`);
           return res
             .status(200)

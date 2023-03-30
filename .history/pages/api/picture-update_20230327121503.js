@@ -42,10 +42,11 @@ async function pushImagesToShopify(images, productId) {
 
 //this is the `serverless function` that takes care of the communication between shopify's webhook and bynder service
 export default async function (req, res) {
+  console.log("running?? ", req, res)
   // We need to await the Stream to receive the complete body Buffer
   const body = await getRawBody(req);
   // Get the header from the request
-  const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
+  const hmacHeader = req.headers["x-shopify-hmac-sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
     .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
@@ -96,7 +97,6 @@ export default async function (req, res) {
           }
 
           await pushImagesToShopify(images, productId);
-          
           console.info(`Product ${productId} updated`);
           return res
             .status(200)
@@ -127,8 +127,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-
-async function test(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}

@@ -15,7 +15,7 @@ async function pushImagesToShopify(images, productId) {
   for (let i = 0; i < images.length; i++) {
     try {
       const response = await fetch(
-        `https://boutique-store-balr.myshopify.com/admin/api/2022-07/products/${productId}/images.json`,
+        `https://boutique-store-balr.myshopify.com/admin/api/2022-07/products/6928780001416/images.json`,
         {
           method: "POST",
           headers: {
@@ -45,7 +45,7 @@ export default async function (req, res) {
   // We need to await the Stream to receive the complete body Buffer
   const body = await getRawBody(req);
   // Get the header from the request
-  const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
+  const hmacHeader = req.headers["x-shopify-hmac-sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
     .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
@@ -96,7 +96,6 @@ export default async function (req, res) {
           }
 
           await pushImagesToShopify(images, productId);
-          
           console.info(`Product ${productId} updated`);
           return res
             .status(200)
@@ -127,8 +126,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-
-async function test(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}

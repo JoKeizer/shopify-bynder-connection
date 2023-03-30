@@ -46,6 +46,7 @@ export default async function (req, res) {
   const body = await getRawBody(req);
   // Get the header from the request
   const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
+  const store = req.headers[""]
   // Digest the data into a hmac hash
   const digest = crypto
     .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
@@ -96,7 +97,6 @@ export default async function (req, res) {
           }
 
           await pushImagesToShopify(images, productId);
-          
           console.info(`Product ${productId} updated`);
           return res
             .status(200)
@@ -127,8 +127,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-
-async function test(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
