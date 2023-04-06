@@ -9,6 +9,7 @@ const bynder = new Bynder({
   permanentToken: process.env.BYNDER_PERMANENT_TOKEN,
 });
 
+console.log(bynder)
 
 //this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
 async function pushImagesToShopify(images, productId) {
