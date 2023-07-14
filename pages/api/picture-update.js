@@ -3,15 +3,10 @@ import getRawBody from "raw-body";
 import crypto from "crypto";
 import fetch from "node-fetch";
 
-var SHOPIFY_BOUTIQUE_SECRET = "b782e667dfae0f2c853d115d8332c99a"
-var ACCESS_BOUTIQUE_TOKEN="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"
-var BYNDER_PERMANENT_TOKEN = "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd"
-
-
 //first create a `bynder instance` since we are using Bynder sdk'
 const bynder = new Bynder({
   baseURL: "https://balr.getbynder.com/api/v4/media",
-  permanentToken: BYNDER_PERMANENT_TOKEN,
+  permanentToken:  "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd",
 });
 
 
@@ -26,7 +21,7 @@ async function pushImagesToShopify(images, productId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Shopify-Access-Token": ACCESS_BOUTIQUE_TOKEN,
+            "X-Shopify-Access-Token": "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",
           },
           body: JSON.stringify({
             image: {
@@ -55,7 +50,7 @@ export default async function fetchDataBynder(req, res) {
   const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac("sha256", SHOPIFY_BOUTIQUE_SECRET)
+    .createHmac("sha256", "b782e667dfae0f2c853d115d8332c99a")
     .update(body)
     .digest("base64");
   // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
