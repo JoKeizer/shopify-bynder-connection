@@ -118,7 +118,7 @@ export default async function (req, res) {
   } else {
     // INVALID - Respond with 401 Unauthorized, the call does not come from shopify and could be an attempt to inject stuff on our store/
     console.info("invalid request");
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized test!" });
   }
 }
 
@@ -130,6 +130,4 @@ export const config = {
 };
 
 
-async function test(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
+
