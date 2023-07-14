@@ -1,14 +1,28 @@
 import Bynder from "@bynder/bynder-js-sdk";
 import getRawBody from "raw-body";
 import crypto from "crypto";
-console.log("file running")
+import fetch from "node-fetch";
+
+var SHOPIFY_BOUTIQUE_SECRET = "b782e667dfae0f2c853d115d8332c99a"
+var ACCESS_BOUTIQUE_TOKEN="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"
+var BYNDER_PERMANENT_TOKEN = "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd"
+
 
 //first create a `bynder instance` since we are using Bynder sdk'
 const bynder = new Bynder({
-  baseURL: "https://balr.getbynder.com/api/",
-  permanentToken: process.env.BYNDER_PERMANENT_TOKEN,
+  baseURL: "https://balr.getbynder.com/api/v4/media",
+  permanentToken: BYNDER_PERMANENT_TOKEN,
 });
 
+
+const response = await fetch('https://httpbin.org/post', {
+	method: 'post',
+	body: JSON.stringify(body),
+	headers: {'Content-Type': 'application/json'}
+});
+const data = await response.json();
+
+console.log(data);
 
 //this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
 async function pushImagesToShopify(images, productId) {
@@ -21,7 +35,7 @@ async function pushImagesToShopify(images, productId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Shopify-Access-Token": process.env.ACCESS_BOUTIQUE_TOKEN,
+            "X-Shopify-Access-Token": ACCESS_BOUTIQUE_TOKEN,
           },
           body: JSON.stringify({
             image: {
@@ -41,15 +55,16 @@ async function pushImagesToShopify(images, productId) {
   }
 }
 
+
 //this is the `serverless function` that takes care of the communication between shopify's webhook and bynder service
-export default async function (req, res) {
+export default async function fetchDataBynder(req, res) {
   // We need to await the Stream to receive the complete body Buffer
   const body = await getRawBody(req);
   // Get the header from the request
   const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac("sha256", process.env.SHOPIFY_BOUTIQUE_SECRET)
+    .createHmac("sha256", SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
     .digest("base64");
   // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
@@ -118,7 +133,7 @@ export default async function (req, res) {
   } else {
     // INVALID - Respond with 401 Unauthorized, the call does not come from shopify and could be an attempt to inject stuff on our store/
     console.info("invalid request");
-    return res.status(401).json({ message: "Unauthorized test!" });
+    return res.status(401).json({ message: "Unauthorized" });
   }
 }
 
