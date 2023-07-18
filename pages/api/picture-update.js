@@ -5,7 +5,9 @@ import fetch from "node-fetch";
 
 var SHOPIFY_BOUTIQUE_SECRET = "b782e667dfae0f2c853d115d8332c99a"
 var ACCESS_BOUTIQUE_TOKEN="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"
+var ACCESS_API_KEY = "5a81e93d7a4bbf99a6cc2f977f76175d"
 var BYNDER_PERMANENT_TOKEN = "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd"
+var ACCESS_BOOMI = "anVyYW15YnYtUzk5NjFEOmEzNTczZWIzLTkxZDQtNDBlYS1hZDM3LTU4ZGJkZTVjODhmNg"
 
 
 //first create a `bynder instance` since we are using Bynder sdk'
@@ -14,6 +16,20 @@ const bynder = new Bynder({
   permanentToken: BYNDER_PERMANENT_TOKEN,
 });
 
+
+fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
+{
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization":  `Basic ${ACCESS_BOOMI}`,
+  },
+})
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+
+
+  
 
 
 //this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
