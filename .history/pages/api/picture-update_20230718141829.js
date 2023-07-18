@@ -62,7 +62,7 @@ export default async function fetchDataBynder(req, res) {
   // We need to await the Stream to receive the complete body Buffer
   const body = await getRawBody(req);
   // Get the header from the request
-  const hmacHeader = req.headers['x-shopify-hmac-sha256']
+  const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
 
   try {
     const response = await fetch(
