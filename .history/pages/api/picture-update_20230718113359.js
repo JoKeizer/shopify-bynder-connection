@@ -22,7 +22,7 @@ try {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    "Authorization":  `Basic ${ACCESS_BOOMI}`,
+    "Authorization":  `Basic + ' ' + ${ACCESS_BOOMI}`,
   },
   body: JSON.stringify({
     Shopify: {
