@@ -66,7 +66,11 @@ export default async function fetchDataBynder(req, res) {
       "Content-Type": "application/json",
       "Authorization":  `Basic ${ACCESS_BOOMI}`,
     },
- 
+    body: JSON.stringify({
+      shopify: {
+        reg: req.headers["X-Shopify-Hmac-Sha256"],
+      },
+    }),
   })
     .then((response) => response.json())
     .then((json) => console.log(json));
