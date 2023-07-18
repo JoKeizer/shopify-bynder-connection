@@ -22,7 +22,7 @@ fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    "Authorization":  `Basic + ' ' + ${ACCESS_BOOMI}`,
+    "Authorization":  `Basic ${ACCESS_BOOMI}`,
   },
 })
   .then((response) => response.json())
