@@ -16,28 +16,6 @@ const bynder = new Bynder({
   permanentToken: BYNDER_PERMANENT_TOKEN,
 });
 
-try {
-  fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
-{
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization":  `Basic ${ACCESS_BOOMI}`,
-  },
-  body: JSON.stringify({
-    Shopify: {
-      req: req.headers["X-Shopify-Hmac-Sha256"],
-    },
-  }),
-})
-  .then((response) => response.json())
-  .then((json) => console.log(json));
-
-} catch (err) {
-  console.error("Error fetching", err);
-
-
-}
 
 
 
