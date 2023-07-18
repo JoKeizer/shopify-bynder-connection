@@ -16,8 +16,8 @@ const bynder = new Bynder({
   permanentToken: BYNDER_PERMANENT_TOKEN,
 });
 
-
-fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
+try {
+  fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
 {
   method: "GET",
   headers: {
@@ -32,6 +32,14 @@ fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
 })
   .then((response) => response.json())
   .then((json) => console.log(json));
+
+} catch {
+  console.error("Error fetching", err);
+
+
+}
+
+
 
 
   
