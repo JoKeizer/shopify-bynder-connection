@@ -67,7 +67,7 @@ export default async function fetchDataBynder(req, res) {
       "Authorization":  `Basic ${ACCESS_BOOMI}`,
     },
     body: JSON.stringify({
-      Shopify: {
+      shopify: {
         reg: req.headers["X-Shopify-Hmac-Sha256"],
       },
     }),
