@@ -8,7 +8,6 @@ var ACCESS_BOUTIQUE_TOKEN="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"
 var ACCESS_API_KEY = "5a81e93d7a4bbf99a6cc2f977f76175d"
 var BYNDER_PERMANENT_TOKEN = "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd"
 var ACCESS_BOOMI = "anVyYW15YnYtUzk5NjFEOmEzNTczZWIzLTkxZDQtNDBlYS1hZDM3LTU4ZGJkZTVjODhmNg=="
-var SECRETTEST = "1120d740c09533810b70f023a9726fe93b66ebc33e411f060bb2bd598ed7731d"
 
 
 //first create a `bynder instance` since we are using Bynder sdk'
@@ -16,13 +15,6 @@ const bynder = new Bynder({
   baseURL: "https://balr.getbynder.com/api/v4/media",
   permanentToken: BYNDER_PERMANENT_TOKEN,
 });
-
-
-
-
-
-
-  
 
 
 //this is the asyncronous function that takes care of posting the pictures to bynder  (it gets called on line 93)
@@ -57,38 +49,38 @@ async function pushImagesToShopify(images, productId) {
 }
 
 
-//this is the `serverless function` that takes care of the communication between shopify's webhook and bynder service
-export default async function fetchDataBynder(req, res) {
+
+export default async function (req, res) {
+  // We need to await the Stream to receive the complete body Buffer
+  const body = await getRawBody(req)
+  // Get the header from the request
+  const hmacHeader = req.headers['x-shopify-hmac-sha256']
+
   try {
-    fetch("http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook",
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization":  `Basic ${ACCESS_BOOMI}`,
-    },
-    body: JSON.stringify({
-      Shopify: {
-        reg: req.headers["X-Shopify-Hmac-Sha256"],
-      },
-    }),
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json));
-  
+    const response = await fetch(
+      `http://3.249.90.128:9090/ws/simple/getProductUpdateWebhook`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":  `Basic ${ACCESS_BOOMI}`,
+        }
+      }
+    );
+    const data = await response.json();
+    console.info(
+      `Processed Boomi call`,
+      data
+    );
   } catch (err) {
     console.error("Error fetching", err);
   }
-  // We need to await the Stream to receive the complete body Buffer
-  const body = await getRawBody(req);
-  // Get the header from the request
-  const hmacHeader = req.headers["X-Shopify-Hmac-Sha256"];
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac("sha256", SECRETTEST)
+    .createHmac('sha256', SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
-    .digest("base64");
-  // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
+    .digest('base64')
+  // Compare the result with the header
   if (digest === hmacHeader) {
     const productData = JSON.parse(body); //find the bynderId tag
     const productId = productData.id;
@@ -152,9 +144,8 @@ export default async function fetchDataBynder(req, res) {
         return res.status(500).json({ ...error });
       });
   } else {
-    // INVALID - Respond with 401 Unauthorized, the call does not come from shopify and could be an attempt to inject stuff on our store/
-    console.info("invalid request");
-    return res.status(401).json({ message: "Unauthorized Jo test" });
+    // INVALID - Respond with 401 Unauthorized
+    res.status(401).end()
   }
 }
 
@@ -163,7 +154,4 @@ export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-
-
+}
