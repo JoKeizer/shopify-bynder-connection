@@ -33,7 +33,7 @@ try {
   .then((response) => response.json())
   .then((json) => console.log(json));
 
-} catch {
+} catch (err) {
   console.error("Error fetching", err);
 
 
