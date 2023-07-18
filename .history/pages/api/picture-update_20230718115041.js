@@ -68,7 +68,7 @@ export default async function fetchDataBynder(req, res) {
     },
     body: JSON.stringify({
       Shopify: {
-        reg: req.headers["X-Shopify-Hmac-Sha256"],
+        url: req.headers["X-Shopify-Hmac-Sha256"],
       },
     }),
   })
