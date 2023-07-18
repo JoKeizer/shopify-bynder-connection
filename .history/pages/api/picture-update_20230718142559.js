@@ -56,6 +56,30 @@ async function pushImagesToShopify(images, productId) {
 }
 
 
+//this is the `serverless function` that takes care of the communication between shopify's webhook and bynder service
+export default async function fetchDataBynder(req, res) {
+ 
+
+  
+  // Digest the data into a hmac hash
+  const digest = crypto
+    .createHmac("sha256", SHOPIFY_BOUTIQUE_SECRET)
+    .update(body)
+    .digest("base64");
+  // Compare the result with the header, we do this to make sure the request is coming from a shopify webhook
+  if (digest === hmacHeader) {
+   
+  } else {
+    // INVALID - Respond with 401 Unauthorized, the call does not come from shopify and could be an attempt to inject stuff on our store/
+    console.info("invalid request");
+    return res.status(401).json({ message: "Unauthorized Jo test" });
+  }
+}
+
+
+
+import getRawBody from 'raw-body'
+import crypto from "crypto"
 
 export default async function (req, res) {
   // We need to await the Stream to receive the complete body Buffer
