@@ -77,7 +77,7 @@ export default async function fetchDataBynder(req, res) {
         },
         body: JSON.stringify({
           Shopify: {
-            req: hmacHeader
+            req: "hello"
           },
         }),
       }
