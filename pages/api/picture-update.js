@@ -77,7 +77,7 @@ export default async function (req, res) {
   }
   // Digest the data into a hmac hash
   const digest = crypto
-    .createHmac('sha256', process.env.SHOPIFY_SECRET)
+    .createHmac('sha256', SHOPIFY_BOUTIQUE_SECRET)
     .update(body)
     .digest('base64')
   // Compare the result with the header
