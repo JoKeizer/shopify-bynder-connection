@@ -5,9 +5,9 @@ import getRawBody from "raw-body";
 import crypto from "crypto";
 
 
-var ACCESS_BOUTIQUE_TOKEN="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"
+var ACCESS_BOUTIQUE_TOKEN="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"
 var BYNDER_PERMANENT_TOKEN = "9eeda299b4a287dbf755d689bf69b2f8dfc2ece4ecaf08c1aba7b5b9367bf5bd"
-var WEBHOOK_SECRET_KEY = "b1fea9e11084c3543c106428c6b1afb78859232ce487d0dc7749380c3c5a3475"
+var WEBHOOK_SECRET_KEY = "1120d740c09533810b70f023a9726fe93b66ebc33e411f060bb2bd598ed7731d"
 
 //first create a `bynder instance` since we are using Bynder sdk'
 const bynder = new Bynder({
